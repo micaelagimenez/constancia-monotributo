@@ -8,6 +8,7 @@ padron5_wsdl = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5?w
 cuit_consultante = "20309556381"
 
 
+
 def ws_sr_padron5(cuit_requested, ta_sign=None, ta_token=None):
     try:
         if ta_sign is None and ta_token is None:
