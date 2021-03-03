@@ -1,13 +1,9 @@
 from django.db import models
-import urllib.request
-import urllib
-import json
-from urllib.parse import quote
 
 class Monotributo(models.Model):
     
-    cuit = models.CharField(max_length=200)
-    email = models.CharField()
+    cuit = models.CharField(max_length=11)
+    email = models.CharField(max_length=100)
     fecha_solicitud = models.DateTimeField()
     resultado = models.CharField(max_length=100)
     enviado = models.BooleanField()
