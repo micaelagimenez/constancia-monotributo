@@ -1,7 +1,7 @@
 from zeep.exceptions import Fault
 from zeep.helpers import serialize_object
 from zeep import Client
-import wsaa
+from . import wsaa
 
 padron13_wsdl = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA13?wsdl"
 padron5_wsdl = "https://aws.afip.gov.ar/sr-padron/webservices/personaServiceA5?wsdl"
