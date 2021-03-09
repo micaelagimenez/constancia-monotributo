@@ -12,7 +12,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-import pdfkit
+import io
+from PIL import Image
+from importlib import reload
+import sys
 
 class ConstanciaInscripcion(FormView):
 
@@ -96,12 +99,15 @@ class ConstanciaInscripcion(FormView):
                 constancia =  wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table[2]')))
                 constancia_screenshot = constancia.screenshot_as_png
                 
-                with open('article.png', 'wb') as f:
-                    f.write(constancia_screenshot)
+                a = io.BytesIO(constancia_screenshot)
+
+                image1 = Image.open(a)
+                im1 = image1.convert('RGB')
+                pdf = im1.save(r'constancia.pdf')
                     
                 #screenshot to pdf
                 
-
+                constancia_email(pdf, email)
                 #send email
             
         return render(request, 'app/constancia-inscripcion.html')
