@@ -24,6 +24,7 @@ class ConstanciaInscripcion(FormView):
         form = MonotributoForm(request.POST)
         email = request.POST['Email']
 
+
         #Verificar cuit en padron13 una vez que es ingresado
         cuit_r = int(request.POST["CUIT"])
         response = ws_sr_padron13_get_persona(cuit_r)
@@ -92,31 +93,18 @@ class ConstanciaInscripcion(FormView):
             
                 #save screenshot 
                 sleep(4)
-                constancia = driver.save_screenshot("screenshot.png")
-
+                constancia =  wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table[2]')))
+                constancia_screenshot = constancia.screenshot_as_png
+                
+                with open('article.png', 'wb') as f:
+                    f.write(constancia_screenshot)
+                    
                 #screenshot to pdf
                 
 
                 #send email
-                
-
-        #Captcha
-        c_data = {
-            'response': request.POST.get('g-recaptcha-response'),
-            'secret': "6LdEnNsZAAAAANeDqX4oOOaPnidRtoG9yMApCl_t"
-        }
-        resp = requests.post('https://www.google.com/recaptcha/api/siteverify', data=c_data)
-        captcha_response = resp.json()
-    
-        if not captcha_response.get('success') or captcha_response.get('score') < 0.6:
-            print("captcha incorrecto")
-        else:
-            print("captcha correcto")
-
+            
         return render(request, 'app/constancia-inscripcion.html')
-
-    
-
 
         
 
