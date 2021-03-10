@@ -1,16 +1,22 @@
 ﻿<!DOCTYPE HTML>
 <html>
 <head>
+
 	<title>Constancia</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
     
     <script src="https://www.google.com/recaptcha/api.js?render=6LdEnNsZAAAAAKotfjwOJsR4r8nvq5ADWhMZEqJ9"></script>
+    <script>
+        function onSubmit(token) {
+          document.getElementById("demo-form").submit();
+        }
+      </script>
 
 </head>
 <body>
+
 	<div class="header">
     </div>
+    
     <div class="wrap">
         <header></header>
         <form action='/constancia-inscripcion' method="POST">
@@ -21,11 +27,11 @@
             <label for="email">Email:</label>
             <input type="text" name="Email">
 
-            <input type="hidden" name="g-recaptcha-response" id='recaptcha'>
+            <input type="hidden" name="g-recaptcha-response" id='recaptcha' >
 
             <button type="submit" name="Solicitar constancia"></button>
         </form>
-          
+  
     </div>
 
 

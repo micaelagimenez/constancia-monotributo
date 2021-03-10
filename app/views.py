@@ -5,23 +5,28 @@ from .forms import MonotributoForm
 from app.ws_sr_padron import ws_sr_padron13_get_persona
 from app.captcha import resolve_simple_captcha
 from app.constancia_email import constancia_email
-from time import sleep
+from ratelimit.decorators import ratelimit
 
+#selenium
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from time import sleep
 
+#screenshot pdf
 import io
 from PIL import Image
 from importlib import reload
 import sys
+
 
 class ConstanciaInscripcion(FormView):
 
     def get(self, request):
        return render(request, 'app/constancia-inscripcion.html')
     
+    @ratelimit(key='ip', rate='3/d')
     def post(self,request):
 
         form = MonotributoForm(request.POST)
@@ -99,16 +104,21 @@ class ConstanciaInscripcion(FormView):
                 constancia =  wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table[2]')))
                 constancia_screenshot = constancia.screenshot_as_png
                 
+                #screenshot to pdf
                 a = io.BytesIO(constancia_screenshot)
-
                 image1 = Image.open(a)
                 im1 = image1.convert('RGB')
-                pdf = im1.save(r'constancia.pdf')
-                    
-                #screenshot to pdf
-                
-                constancia_email(pdf, email)
+                im1.save('constancia.pdf')
+                pdf = open('constancia.pdf','rb').read()
+
                 #send email
+                constancia_email(pdf, email)
+
+                if constancia_email == True:
+                    print("Sus datos fueron enviados correctamente, en un máximo de 2 hs. estarás recibiendo tu constancia por email.")
+                else:
+                    print("No hemos podido procesar su solicitud, por favor reintente nuevamente más tarde.")
+
             
         return render(request, 'app/constancia-inscripcion.html')
 
