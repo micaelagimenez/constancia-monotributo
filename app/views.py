@@ -1,10 +1,12 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 import requests
 from django.views.generic import FormView
 from .forms import MonotributoForm
 from app.ws_sr_padron import ws_sr_padron13_get_persona
 from app.captcha import resolve_simple_captcha
 from app.constancia_email import constancia_email
+
+from django.utils.decorators import method_decorator
 from ratelimit.decorators import ratelimit
 
 #selenium
@@ -26,7 +28,7 @@ class ConstanciaInscripcion(FormView):
     def get(self, request):
        return render(request, 'app/constancia-inscripcion.html')
     
-    @ratelimit(key='ip', rate='3/d')
+    @method_decorator(ratelimit(key='ip', rate='3/d', block=True))
     def post(self,request):
 
         form = MonotributoForm(request.POST)
@@ -112,7 +114,7 @@ class ConstanciaInscripcion(FormView):
                 pdf = open('constancia.pdf','rb').read()
 
                 #send email
-                constancia_email(pdf, email)
+                constancia_email(email)
 
                 if constancia_email == True:
                     print("Sus datos fueron enviados correctamente, en un máximo de 2 hs. estarás recibiendo tu constancia por email.")
@@ -121,6 +123,4 @@ class ConstanciaInscripcion(FormView):
 
             
         return render(request, 'app/constancia-inscripcion.html')
-
-        
 
