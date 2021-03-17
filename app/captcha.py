@@ -2,7 +2,7 @@ import requests
 from time import sleep
 
 def resolve_simple_captcha(image_base64):
-            CAPTCHA_API_KEY = 'e00087e2ee1a7d2b357231746ce1884b'
+            CAPTCHA_API_KEY = ''
 
             payload = {
                     'method':'base64',
